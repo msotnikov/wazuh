@@ -41,6 +41,10 @@ ReadServiceInstallDir()
     # macOS LaunchDaemon
     if [ "X${_rsid_dir}" = "X" ]; then
         _rsid_dir=$(sed -n 's|^[[:space:]]*<string>\(/.*\)/Wazuh-launcher</string>[[:space:]]*$|\1|p' "${1}" 2>/dev/null | head -1)
+        # 4.14.0-4.14.8 keep the launcher in StartupItems; the home is in its WAZUH script.
+        if [ "X${_rsid_dir}" = "X/Library/StartupItems/WAZUH" ]; then
+            _rsid_dir=$(ReadServiceInstallDir /Library/StartupItems/WAZUH/WAZUH)
+        fi
     fi
 
     echo "${_rsid_dir}"
